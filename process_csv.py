@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
     categories = {}
     gavel_export = []
-    previous_title = None
+    seen = {}
 
     with open(sys.argv[1], 'r', encoding="utf8") as file:
         reader = csv.DictReader(file)
@@ -44,10 +44,9 @@ if __name__ == '__main__':
 
             categories[line['Opt-in prize']].append(row)
 
-            if previous_title != row[0]:
+            if row[0] not in seen:
+                seen[row[0]] = True
                 gavel_export.append(row)
-
-            previous_title = row[0]
 
     for category in categories:
         save_export('{}.csv'.format(category), categories[category])
