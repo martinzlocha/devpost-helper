@@ -33,16 +33,25 @@ if __name__ == '__main__':
     categories = {}
     gavel_export = []
     seen = {}
+    seen_times = {}
 
     with open(sys.argv[1], 'r', encoding="utf8") as file:
         reader = csv.DictReader(file)
         for line in reader:
             row = extract_line(line)
 
-            if line['Opt-in prize'] not in categories:
-                categories[line['Opt-in prize']] = []
+            if row[0] not in seen_times:
+                seen_times[row[0]] = 1
+            else:
+                seen_times[row[0]] += 1
 
-            categories[line['Opt-in prize']].append(row)
+            if seen_times[row[0]] <= 2:
+                print(row[0])
+
+                if line['Opt-in prize'] not in categories:
+                    categories[line['Opt-in prize']] = []
+
+                categories[line['Opt-in prize']].append(row)
 
             if row[0] not in seen:
                 seen[row[0]] = True
